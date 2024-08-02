@@ -18,7 +18,7 @@ public class LogonController implements LoginApi {
 
     @BasicAuthorization
     @Override
-    public ResponseEntity<UserLoginResponse> logon(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<UserLoginResponse> logon(UserLoginRequest userLoginRequest) {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).cacheControl(CacheControl.noCache())
                 .body(logonService.logon(userLoginRequest));
     }
