@@ -65,6 +65,6 @@ API documentation is available at http://localhost:8080/account/swagger-ui.html 
 
 
 ## Rate Limiter Configuration(Good to Know) 
-Limit for period: This is the number of permissions available during one limit refresh period. In this case, it's set to 2, which means the service can be called 2 times in one limit refresh period.  
-Limit refresh period: This is the duration of a limit refresh period. The service will gain its full quota back after each limit refresh period. In this case, it's set to 2 seconds.  
-Timeout duration: This is the maximum wait time a thread will wait to acquire permission. In this case, it's set to 10 seconds.  
+- Limit for period: This is the number of permissions available during one limit refresh period. In this case, it's set to 2, which means the service can be called 2 times in one limit refresh period.  
+- Limit refresh period: This is the duration of a limit refresh period. The service will gain its full quota back after each limit refresh period. In this case, it's set to 2 seconds.  
+- Timeout duration: This is the maximum wait time a thread will wait to acquire permission. In this case, it's set to 10 seconds.  
