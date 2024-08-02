@@ -1,0 +1,255 @@
+openapi: '3.0.0'
+info:
+  title: 'Register and Login Service API'
+  description: "This service handles customer registration, account mapping, and user authentication"
+  version: '1.0.0'
+servers:
+  - url: 'localhost:8080'
+security:
+  - basicAuth: []
+paths:
+  /register:
+    post:
+      tags:
+        - 'Registration'
+      summary: 'Register a new user and account mapping'
+      description: 'Register a new user and account mapping'
+      operationId: 'register'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: 'registration successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '403':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithValidationErrors'
+        '401':
+          description: 'Request Unauthorized.'
+        '500':
+          description: 'registration creation failed - Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageWithError'
+  /logon:
+    post:
+      tags:
+        - 'login'
+      summary: 'Authenticate an existing user'
+      description: 'Authenticate an existing user'
+      operationId: 'logon'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: 'registration successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '401':
+          description: 'Request Unauthorized.'
+components:
+  securitySchemes:
+    basicAuth:
+      type: 'http'
+      scheme: 'basic'
+  schemas:
+    RegisterRequest:
+      required:
+        - 'givenName'
+        - 'nameInitial'
+        - 'surname'
+        - 'birthDate'
+        - 'userName'
+        - 'address'
+        - 'document'
+      type: 'object'
+      properties:
+        givenName:
+          type: 'string'
+          pattern: '^[a-zA-Z0-9 ]*$'
+          minLength: 2
+          maxLength: 50
+          description: 'Given name is mandatory and must be less than 50 characters'
+          example: 'Test Name'
+        nameInitial:
+          type: 'string'
+          pattern: '^[a-zA-Z]*$'
+          maxLength: 1
+          description: 'Name initial is mandatory and must be 1 character'
+          example: 'T'
+        surname:
+          type: 'string'
+          pattern: '^[a-zA-Z0-9 ]*$'
+          minLength: 2
+          maxLength: 50
+          description: 'Surname is mandatory and must be less than 50 characters'
+          example: 'Test Surname'
+        birthDate:
+          type: 'string'
+          format: 'date'
+          description: 'Birth date is mandatory and format (dd-MM-yyyy)'
+          example: '2020-01-01'
+        userName:
+          type: 'string'
+          pattern: '^[a-zA-Z0-9]*$'
+          minLength: 4
+          maxLength: 50
+          description: 'UserName is mandatory and must not contain spaces or special characters'
+          example: 'User123'
+        address:
+          $ref: '#/components/schemas/Address'
+        document:
+          $ref: '#/components/schemas/Document'
+    Address:
+      required:
+        - 'street'
+        - 'houseNumber'
+        - 'postalCode'
+        - 'city'
+        - 'country'
+      type: 'object'
+      properties:
+        street:
+          type: 'string'
+          pattern: '^[a-zA-Z ]*$'
+          maxLength: 50
+          description: 'Street is mandatory'
+          example: 'testStreet'
+        houseNumber:
+          type: 'integer'
+          minLength: 2
+          maxLength: 10
+          description: 'House Number is mandatory'
+          example: 123
+        postalCode:
+          type: 'string'
+          minLength: 2
+          maxLength: 10
+          description: 'Postal Code is mandatory'
+          example: '1234 AB'
+        city:
+          type: 'string'
+          minLength: 2
+          maxLength: 30
+          description: 'City is mandatory'
+          example: 'TestCity'
+        country:
+          type: 'string'
+          minLength: 2
+          maxLength: 30
+          description: 'Country is mandatory'
+          example: 'TestCountry'
+    Document:
+      required:
+        - 'documentNumber'
+        - 'documentIssueDate'
+        - 'documentIssueCountry'
+        - 'documentTypeCode'
+      type: 'object'
+      properties:
+        documentNumber:
+          type: 'string'
+          pattern: '^[a-zA-Z0-9]*$'
+          minLength: 2
+          maxLength: 30
+          description: 'Document Number is mandatory and must be less than 30 characters'
+          example: '1234567890'
+        documentIssueDate:
+          type: 'string'
+          format: 'date'
+          description: 'Document Issue Date is mandatory and and format (dd-MM-yyyy)'
+          example: '2020-01-01'
+        documentIssueCountry:
+          type: 'string'
+          minLength: 2
+          maxLength: 30
+          description: 'Document Issue Country is mandatory'
+          example: 'TestCountry'
+        documentTypeCode:
+          type: 'string'
+          description: 'Document Type Code is mandatory'
+          example: 'PASSPORT'
+          enum:
+            - 'PASSPORT'
+            - 'DRIVERS_LICENSE'
+    UserLoginResponse:
+      required:
+        - 'status'
+        - 'password'
+      type: 'object'
+      properties:
+        status:
+          type: 'string'
+    UserLoginRequest:
+      required:
+        - 'userName'
+        - 'password'
+      type: 'object'
+      properties:
+        userName:
+          type: 'string'
+          minLength: 4
+          maxLength: 50
+          description: 'UserName is mandatory'
+          example: 'User123'
+        password:
+          type: 'string'
+          minLength: 4
+          maxLength: 250
+          description: 'Password is mandatory'
+          example: 'Password123'
+    RegisterResponse:
+      title: 'Response with Result message'
+      required:
+        - 'userName'
+        - 'password'
+      type: 'object'
+      properties:
+        userName:
+          type: 'string'
+          example: 'registration failed - Request not accepted'
+        password:
+          type: 'string'
+          example: 'UserName is not valid'
+    ResponseWithValidationErrors:
+      title: 'Response with list of validation errors'
+      required:
+        - 'status'
+        - 'description'
+      type: 'object'
+      properties:
+        errorCode:
+          type: 'string'
+          example: 'registration failed - Request not accepted'
+        description:
+          type: 'string'
+          example: 'UserName is not valid'
+    ResponseMessageWithError:
+      title: 'Response with error'
+      required:
+        - 'status'
+      type: 'object'
+      properties:
+        errorCode:
+          type: 'string'
+          example: 'registration status message returned by the API'
+        description:
+          type: 'string'
+          example: 'UserName already taken'
