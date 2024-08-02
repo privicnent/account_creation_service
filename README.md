@@ -1,7 +1,6 @@
 # Account Creation Service
 
-This service is responsible for creating new customer accounts and providing login functionality. It also maps the newly created accounts to existing customers and sends the username and password to the customer's registered email address.
-
+This service is responsible for creating new customer accounts and providing login functionality.
 ## Endpoints
 
 - `POST /register`: Creates a new customer account. The request body should contain customer details like name, birth date, address, and document details.
